@@ -1,3 +1,9 @@
+// Hangman.java
+// Drew Bies, Patrick Seminatore
+// username: abies2
+
+
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -33,8 +39,7 @@ public class Hangman {
     public static void runMenu(){
         String input = JOptionPane.showInputDialog("1. Play game from a randomly chosen word in a list" + 
                 "\n2. Play game from a word entered by another user\n3. Exit Game");
-        int in = Integer.parseInt(input);
-        switch (in) {
+        switch (Integer.parseInt(input)) {
             case 1: // play game from random word
                 runGame(true);
                 break; 
@@ -53,20 +58,68 @@ public class Hangman {
     
     public static void runGame(boolean isRandom){
         String wordToGuess;
+        int correctGuesses = 0;
         if(isRandom){
             int rand = (int) (Math.random() * WORDS.length);
             wordToGuess = WORDS[rand];
         }else{
             wordToGuess = getWord();
         }
-        JOptionPane.showMessageDialog(null, "your word: " + wordToGuess);
+        //JOptionPane.showMessageDialog(null, "your word: " + wordToGuess);
         int strikes = 0;
-        while(strikes > 5){
-        
+        char[] blanks = new char[wordToGuess.length()];
+        for (int i = 0; i < wordToGuess.length(); i++){
+            blanks[i] = '_' ;
         }
+        boolean wrong;
+        while(strikes < 5){
+            wrong = true;
+            String displayBlanks = new String(blanks);
+            //JOptionPane.showMessageDialog(null, "It works");
+            String disp = displayBlanks + "\nStrikes: " + strikes + "\nEnter your guess: ";
+            String sGuess = JOptionPane.showInputDialog(disp).trim();
+            if ((int)sGuess.charAt(0) < 97){
+                sGuess = sGuess.toLowerCase();
+            }
+            char guess = sGuess.charAt(0);
+            int check = guess;
+            if ((check < 65 || check > 90) && (check < 97 || check > 122)) {
+                JOptionPane.showMessageDialog(null, "Error: Please only enter alphabetic characters.  Try again!");
+                break;
+            }
+            wordToGuess = wordToGuess.toLowerCase();
+            for (int j = 0; j < wordToGuess.length(); j++){
+                if (guess == wordToGuess.charAt(j)){
+                    if (j==0){
+                        int ascii = guess - 32;
+                        char aGuess = (char) ascii;
+                    }
+                    blanks[j] = guess;
+                    wrong = false;
+                    correctGuesses++;
+                }
+            }
+            if (wrong){
+                strikes++;
+            }
+            if (correctGuesses == wordToGuess.length()){
+                JOptionPane.showMessageDialog(null, "Congratulations! You won!");
+                break;
+            }
+            if (strikes == 5){
+                JOptionPane.showMessageDialog(null, "Sorry, you lost.");
+                break;
+            }
+        }
+        runMenu();
     }
     
     public static String getWord(){
         return JOptionPane.showInputDialog("Enter the word to be guessed: ").trim();
+    }
+    
+    public static char getChar(String word){
+        String input = JOptionPane.showInputDialog("").trim();
+        return input.charAt(0);
     }
 }
