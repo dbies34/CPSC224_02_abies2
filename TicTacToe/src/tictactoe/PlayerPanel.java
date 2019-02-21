@@ -22,7 +22,7 @@ public class PlayerPanel extends JPanel {
     JTextField txtPlayerLosses;
     
     public PlayerPanel(Player player){
-        setLayout(new GridLayout(2, 3));
+        setLayout(new GridLayout(3, 2));
         
         
         lblPlayerName = new JLabel("Name:");
@@ -55,6 +55,18 @@ public class PlayerPanel extends JPanel {
             xo = 'O';
         }
         return "Player " + playerNumString + " (" + xo + "):";
+    }
+    
+    public void displayWins(int wins){
+        txtPlayerWins.setText(String.valueOf(wins));
+    }
+    
+    public void displayLosses(int losses){
+        txtPlayerLosses.setText(String.valueOf(losses));
+    }
+    
+    public void displayName(String name){
+        txtPlayerName.setText(name);
     }
 }
  
