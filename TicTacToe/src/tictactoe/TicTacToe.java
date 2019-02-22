@@ -16,6 +16,7 @@ public class TicTacToe extends JFrame{
 
     private PlayerPanel playerOne;
     private PlayerPanel playerTwo;
+    private JPanel playersPanel;
     private BoardPanel board;
     private ControlPanel controlPanel;
     private JLabel lblTurn;
@@ -33,28 +34,42 @@ public class TicTacToe extends JFrame{
         setLayout(new BorderLayout());
         
         // create the custom panels
-        playerOne = new PlayerPanel(player1);
-        playerTwo = new PlayerPanel(player2);
+        buildPlayerPanel();
         board = new BoardPanel();
         controlPanel = new ControlPanel();
-        lblTurn = new JLabel("");
+        lblTurn = new JLabel("Welcome to Tic Tac Toe!");
+        
         
         // add components to the window
-        add(playerOne, BorderLayout.NORTH);
-        add(playerTwo, BorderLayout.AFTER_LAST_LINE);
-        //add(board);
-        add(controlPanel);
-        add(lblTurn, BorderLayout.SOUTH);
+        addComponents();
         
         // get rid of empty spaces and set visible
-        //pack();
+        pack();
         setVisible(true);
         
     }
     
-    public static void main(String[] args) {
-        new TicTacToe();
+    public void buildPlayerPanel(){
+        playersPanel = new JPanel();
         
+        playerOne = new PlayerPanel(player1);
+        playerTwo = new PlayerPanel(player2);
+        
+        add(playerOne, BorderLayout.WEST);
+        add(playerTwo, BorderLayout.EAST);
+        
+        pack();
     }
     
+    // adds the components to the window
+    public void addComponents(){
+        add(playersPanel, BorderLayout.NORTH);
+        //add(board);
+        add(controlPanel);
+        add(lblTurn, BorderLayout.SOUTH);
+    }
+    
+    public static void main(String[] args) {
+        new TicTacToe();       
+    }
 }
