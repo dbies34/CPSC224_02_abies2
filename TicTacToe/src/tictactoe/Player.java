@@ -10,48 +10,49 @@ package tictactoe;
  * @author ddbie
  */
 public class Player {
+
     private String name;
     private int pNum;
     private int wins;
     private int losses;
-    
-    public Player(String name, int pNum){
+
+    public Player(String name, int pNum) {
         this.name = name;
         this.pNum = pNum;
         wins = 0;
         losses = 0;
     }
-    
-    public void setName(String name){
+
+    public void setName(String name) {
         this.name = name;
     }
-    
-    public void incrementWins(){
+
+    public void incrementWins() {
         wins++;
     }
-    
-    public void incrementLosses(){
+
+    public void incrementLosses() {
         losses++;
     }
-    
-    public void resetStats(){
+
+    public void resetStats() {
         wins = 0;
         losses = 0;
     }
-    
-    public int getWins(){
+
+    public int getWins() {
         return wins;
     }
-    
-    public int getLosses(){
+
+    public int getLosses() {
         return losses;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
-    
-    public int getPNum(){
-        return pNum;                
+
+    public int getPNum() {
+        return pNum;
     }
 }

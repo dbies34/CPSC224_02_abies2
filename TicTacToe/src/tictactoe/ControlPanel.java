@@ -19,10 +19,13 @@ public class ControlPanel extends JPanel {
     private JButton btnResetGame;
     private JButton btnExitGame;
     private ButtonGroup bg;
+    private TicTacToe parent;
     
-    public ControlPanel(){
+    public ControlPanel(TicTacToe p){
+        parent = p;
         // one row, three columns
-        setLayout(new GridLayout(1, 3));
+        setLayout(new BorderLayout());
+        JPanel buttons = new JPanel();
         
         btnNewGame = new JButton("New Game");
         btnResetGame = new JButton("Reset");
@@ -39,20 +42,24 @@ public class ControlPanel extends JPanel {
         bg.add(btnResetGame);
         bg.add(btnExitGame);
         
+        
         // add buttons
-        add(btnNewGame);
-        add(btnResetGame);
-        add(btnExitGame);
+        buttons.add(btnNewGame, BorderLayout.SOUTH);
+        buttons.add(btnResetGame,  BorderLayout.SOUTH);
+        buttons.add(btnExitGame,BorderLayout.SOUTH);
+        
+        add(buttons, BorderLayout.SOUTH);
     }
     
     private class btnNewGameListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e){
-            int input = JOptionPane.showConfirmDialog(null, "Are you sure you want a new game? Wins and Losses will reset.", "New Game?", JOptionPane.YES_NO_OPTION);
+            int input = JOptionPane.showConfirmDialog(null, "Are you sure you want a new game?", "New Game?", JOptionPane.YES_NO_OPTION);
             // 0 = confirm , 1 = no
             if(input == 0){
-                //player1.resetStats();
-                //player2.resetStats();
+                parent.updateNames();
+                parent.clearBoard();
+                parent.startLbl();
             }
         }
     }
@@ -60,11 +67,11 @@ public class ControlPanel extends JPanel {
     private class btnResetGameListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e){
-            int input = JOptionPane.showConfirmDialog(null, "Are you sure you want to reset? Wins and Losses will reset.", "Reset Game?", JOptionPane.YES_NO_OPTION);
+            int input = JOptionPane.showConfirmDialog(null, "This will end the game and set the win/loss stats to 0. Are you Sure?", "Reset Game?", JOptionPane.YES_NO_OPTION);
             // 0 = confirm , 1 = no
             if(input == 0){
-                //player1.resetStats();
-                //player2.resetStats();
+                parent.reset();
+                parent.updateNames();
             }
         }
     }

@@ -5,6 +5,7 @@
  */
 package tictactoe;
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import javax.swing.*;
 
@@ -22,7 +23,10 @@ public class PlayerPanel extends JPanel {
     JTextField txtPlayerLosses;
     
     public PlayerPanel(Player player){
-        setLayout(new GridLayout(3, 2));
+        setLayout(new GridLayout(0,2));
+        //setSize(50, 50);
+        
+        //JPanel players = new JPanel();
         
         
         lblPlayerName = new JLabel("Name:");
@@ -36,6 +40,8 @@ public class PlayerPanel extends JPanel {
         txtPlayerLosses.setEditable(false);
         txtPlayerName.setColumns(8);
         
+        
+        
         setBorder(BorderFactory.createTitledBorder(getPlayerTitle(player.getPNum())));
         
         add(lblPlayerName);
@@ -44,6 +50,11 @@ public class PlayerPanel extends JPanel {
         add(txtPlayerWins);
         add(lblPlayerLosses);
         add(txtPlayerLosses);
+        
+        
+        
+        
+   
     }
     
     public static String getPlayerTitle(int playerNum){
@@ -57,16 +68,15 @@ public class PlayerPanel extends JPanel {
         return "Player " + playerNumString + " (" + xo + "):";
     }
     
-    public void displayWins(int wins){
-        txtPlayerWins.setText(String.valueOf(wins));
+    public void updateStats(Player player){
+        txtPlayerWins.setText(Integer.toString(player.getWins()));
+        txtPlayerLosses.setText(Integer.toString(player.getLosses()));
+        txtPlayerName.setEditable(true);
     }
     
-    public void displayLosses(int losses){
-        txtPlayerLosses.setText(String.valueOf(losses));
+    public void updateName(Player player){
+        player.setName(txtPlayerName.getText());
+        //txtPlayerName.setEditable(false);
     }
     
-    public void displayName(String name){
-        txtPlayerName.setText(name);
-    }
 }
- 
