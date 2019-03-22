@@ -16,21 +16,17 @@ public class MotionParallax4 extends JFrame{
     private int currentY;
     
     public MotionParallax4(){
-        setTitle("Assignment 4: Motion Parallax");
         setSize(500, 500);
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBackground(Color.cyan);
         
         addMouseMotionListener(new MyMouseListener());
         
         setVisible(true);
     }
     
-    public void paint(Graphics g){
+    public void paintComponent(Graphics g){
         super.paint(g);
-        // background sky
-        g.setColor(Color.cyan);
-        g.fillRect(0, 0, 500, 500);
+        
     }
     
     private class MyMouseListener implements MouseMotionListener{
@@ -42,6 +38,10 @@ public class MotionParallax4 extends JFrame{
             currentY = e.getY();
             repaint();
         }
+    }
+    
+    public void actionPerformed(ActionEvent e){
+        repaint();
     }
     
     public static void main(String[] args) {
