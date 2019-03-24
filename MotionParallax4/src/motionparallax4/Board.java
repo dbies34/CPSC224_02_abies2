@@ -25,13 +25,40 @@ public class Board extends JPanel implements ActionListener{
     private final int DELAY = 25;
     private final int BIRDS_INTIAL_X = BOARD_WIDTH;
     private final int BIRDS_INTIAL_Y = (int) (BOARD_HEIGHT / 10);
+    private final int GRASS_INITIAL_X = -25;
+    private final int GRASS_INITIAL_Y = 450;//(int) (BOARD_HEIGHT / 15);
+    
+    private final int GRASS_NEG_SCALE_X = 0 - 5;
+    private final int GRASS_POS_SCALE_X = 5;
+    private final int BIRD_NEG_SCALE_X = 0 - 4;
+    private final int BIRD_POS_SCALE_X = 4;
+    private final int MTN_NEG_SCALE_X = 0 - 3;
+    private final int MTN_POS_SCALE_X = 3;
+    private final int SUN_NEG_SCALE_X = 0 - 2;
+    private final int SUN_POS_SCALE_X = 2;
+    
+    private final int GRASS_NEG_SCALE_Y = 0 - 5;
+    private final int GRASS_POS_SCALE_Y = 5;
+    private final int BIRD_NEG_SCALE_Y = 0 - 4;
+    private final int BIRD_POS_SCALE_Y = 4;
+    private final int MTN_NEG_SCALE_Y = 0 - 3;
+    private final int MTN_POS_SCALE_Y = 3;
+    private final int SUN_NEG_SCALE_Y = 0 - 2;
+    private final int SUN_POS_SCALE_Y = 2;
+    
     
     private Timer timer;
     private Image birds;
+    private Image grass;
     
     private int sunX;
     private int sunY;
     private int birdsX;
+    private int birdsY;
+    private int grassX;
+    private int grassY;
+    private int constraintX;
+    private int constraintY;
     
     public Board(){
         initBoard();
@@ -41,7 +68,12 @@ public class Board extends JPanel implements ActionListener{
         setBackground(Color.cyan);
         setPreferredSize(new Dimension(500, 500));
         
+        constraintX = 0;
+        constraintY = 0;
         birdsX = BIRDS_INTIAL_X;
+        birdsY = BIRDS_INTIAL_Y;
+        grassX = GRASS_INITIAL_X;
+        grassY = GRASS_INITIAL_Y;
         sunX = (int) (BOARD_WIDTH / 1.3);
         sunY = (int) (BOARD_HEIGHT / 50);
         
@@ -63,6 +95,7 @@ public class Board extends JPanel implements ActionListener{
         super.paintComponent(g);
         drawSun(g);
         drawBirds(g);
+        drawGrass(g);
     }
     
     private void drawSun(Graphics g){
@@ -70,8 +103,14 @@ public class Board extends JPanel implements ActionListener{
         g.fillOval(sunX, sunY, 100, 100);
     }
     
+    private void drawGrass(Graphics g){
+        ImageIcon icon = new ImageIcon("src/motionparallax4/grass.png");
+        grass = icon.getImage();
+        g.drawImage(grass, grassX, grassY, 750, 100, this);
+    }
+    
     private void drawBirds(Graphics g){
-        g.drawImage(birds, birdsX, BIRDS_INTIAL_Y, this);
+        g.drawImage(birds, birdsX, birdsY, this);
     }
     
     private class MyMouseListener implements MouseMotionListener{
@@ -83,6 +122,33 @@ public class Board extends JPanel implements ActionListener{
         public void mouseMoved(MouseEvent e){
             currentX = e.getX();
             currentY = e.getY();
+            
+            if (currentX < 250 && constraintX < 0){
+                sunX = sunX + SUN_POS_SCALE_X;
+                grassX = grassX + GRASS_POS_SCALE_X;
+                birdsX = birdsX + BIRD_POS_SCALE_X;
+                constraintX++;
+            }
+            if (currentX > 250 && constraintX > -40){
+                sunX = sunX + SUN_NEG_SCALE_X;
+                grassX = grassX + GRASS_NEG_SCALE_X;
+                birdsX = birdsX + BIRD_NEG_SCALE_X;
+                constraintX--;
+            }
+            
+            if (currentY < 250 && constraintY < 10){
+                sunY = sunY + SUN_POS_SCALE_Y;
+                grassY = grassY + GRASS_POS_SCALE_Y;
+                birdsY = birdsY + BIRD_POS_SCALE_Y;
+                constraintY++;
+            }
+            if (currentY > 250 && constraintY > -5){
+                sunY = sunY + SUN_NEG_SCALE_Y;
+                grassY = grassY+ GRASS_NEG_SCALE_Y;
+                birdsY = birdsY + BIRD_NEG_SCALE_Y;
+                constraintY--;
+            }
+            
             //repaint();
         }
     }
