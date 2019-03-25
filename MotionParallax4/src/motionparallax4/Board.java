@@ -221,11 +221,11 @@ public class Board extends JPanel implements ActionListener{
         }
         @Override 
         public void mousePressed(MouseEvent e){
-            birdsY += 15;
+            birdsY -= 15;
         }
         @Override
         public void mouseReleased(MouseEvent e){
-            
+            birdsY += 15;
         }
     }
     
