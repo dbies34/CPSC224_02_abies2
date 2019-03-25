@@ -50,15 +50,23 @@ public class Board extends JPanel implements ActionListener{
     private Timer timer;
     private Image birds;
     private Image grass;
+    private Image mountainNear;
+    private Image mountainFar;
     
     private int sunX;
     private int sunY;
+    private int grassX;
+    private int grassY;
     private int birdsX;
     private int birdsY;
     private int grassX;
     private int grassY;
     private int constraintX;
     private int constraintY;
+    private int mountainNearX;
+    private int mountainNearY;
+    private int mountainFarX;
+    private int mountainFarY;
     
     public Board(){
         initBoard();
@@ -77,7 +85,16 @@ public class Board extends JPanel implements ActionListener{
         sunX = (int) (BOARD_WIDTH / 1.3);
         sunY = (int) (BOARD_HEIGHT / 50);
         
-        loadImage();
+        grassX = -20;
+        grassY = 50;
+        
+        mountainNearX = 0;
+        mountainNearY = 50;
+        
+        mountainFarX = 0;
+        mountainFarY = 50;
+        
+        loadImages();
         
         addMouseMotionListener(new MyMouseListener());
         
@@ -85,9 +102,18 @@ public class Board extends JPanel implements ActionListener{
         timer.start();
     }
     
-    private void loadImage(){
+    private void loadImages(){
         ImageIcon icon = new ImageIcon("src/motionparallax4/bird.png");
         birds = icon.getImage();
+        
+        ImageIcon iconGrass = new ImageIcon("src/motionparallax4/grass.png");
+        grass = iconGrass.getImage();
+        
+        ImageIcon iconMN = new ImageIcon("src/motionparallax4/mountainNear.png");
+        mountainNear = iconMN.getImage();
+        
+        ImageIcon iconMF = new ImageIcon("src/motionparallax4/mountainFar.png");
+        mountainFar = iconMF.getImage();
     }
     
     @Override
@@ -95,20 +121,28 @@ public class Board extends JPanel implements ActionListener{
         super.paintComponent(g);
         drawSun(g);
         drawBirds(g);
+        drawMountainFar(g);
+        drawMountainNear(g);
         drawGrass(g);
+    }
+    
+    private void drawMountainFar(Graphics g){
+        g.drawImage(mountainFar, mountainFarX, mountainFarY, this);
+    }
+    
+    private void drawMountainNear(Graphics g){
+        g.drawImage(mountainNear, mountainNearX, mountainNearY, this);
+    }
+    
+    private void drawGrass(Graphics g){
+        g.drawImage(grass, grassX, grassY, BOARD_WIDTH + 50, BOARD_HEIGHT, this);
     }
     
     private void drawSun(Graphics g){
         g.setColor(Color.yellow);
-        g.fillOval(sunX, sunY, 100, 100);
+        g.fillOval(sunX, sunY, (int) (BOARD_WIDTH / 5), (int) (BOARD_HEIGHT / 5));
     }
-    
-    private void drawGrass(Graphics g){
-        ImageIcon icon = new ImageIcon("src/motionparallax4/grass.png");
-        grass = icon.getImage();
-        g.drawImage(grass, grassX, grassY, 750, 100, this);
-    }
-    
+   
     private void drawBirds(Graphics g){
         g.drawImage(birds, birdsX, birdsY, this);
     }
