@@ -15,7 +15,6 @@ public class Hand {
     private int numOfAces;
     
     private Card cards[];
-    //private String name;
     
     public Hand(){
         numOfCards = 0;
@@ -44,36 +43,26 @@ public class Hand {
     }
     
     public boolean isBust(){
-        int total = 0;
-        for(int i = 0; i < numOfCards; i++){
-            total += cards[i].getValue();
-        }
-        
-        return total > 21;
+        return getTotal() > 21;
     }
     
     public boolean isBlackjack(){
-        int total = 0;
-        return true;
+        return getTotal() == 21;
     }
     
     public int getTotal(){
         int total = 0;
         
         for(int i = 0; i < numOfCards; i++){
-            if(cards[i].getValue() > 1)
-                total += cards[i].getValue();
+            total += cards[i].getValue();
         }
-        for(int i = 0; i < numOfAces; i++){
-            if(total <= 10){
-                
-            }
-        }
+        if(numOfAces > 0 && total + 10 <= 21)
+            total += 10;
         
         return total;
     }
     
     public int getNumOfCards(){
-        return numOfCards;
+        return numOfCards++;
     }
 }

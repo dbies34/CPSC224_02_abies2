@@ -4,17 +4,27 @@
 
 package blackjack;
 
+import javax.swing.*;
+
 /**
  *
  * @author ddbie
  */
-public class Blackjack {
-
-    /**
-     * @param args the command line arguments
-     */
+public class Blackjack extends JFrame {
+    
+    public Blackjack(){
+        add(new Board());
+        pack();
+        
+        setTitle("Blackjack");
+        setResizable(false);
+        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
     public static void main(String[] args) {
-        // TODO code application logic here
+        Blackjack blackjack = new Blackjack();
+        blackjack.setVisible(true);
     }
     
 }
