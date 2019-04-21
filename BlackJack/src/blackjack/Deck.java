@@ -23,14 +23,13 @@ public class Deck {
 
     public Deck(int numOfDecks){
         numOfCards = 0;
-        totalNumOfCards = numOfDecks * 52 - 1;
+        totalNumOfCards = numOfDecks * 52 -1;
         cards = new Card[totalNumOfCards];
     }
     
     public boolean addCard(Card card){
-        if(numOfCards >= totalNumOfCards){
-            cards[numOfCards] = card;
-            numOfCards++;
+        if(numOfCards < totalNumOfCards){
+            cards[numOfCards++] = card;
             return true;
         }else{
             return false;
@@ -38,8 +37,7 @@ public class Deck {
     }
     
     public Card drawCard(){
-        numOfCards--;
-        return cards[numOfCards + 1];
+        return cards[numOfCards--];
     }
     
     // shuffles the cards num amount of times
@@ -57,5 +55,11 @@ public class Deck {
         }
     }
     
+    public boolean isEmpty(){
+        return numOfCards < 0;
+    }
     
+    public int getNumOfCards(){
+        return numOfCards;
+    }
 }

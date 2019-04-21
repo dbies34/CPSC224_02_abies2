@@ -19,6 +19,9 @@ public class Board extends JPanel implements ActionListener{
     
     private final int CARD_WIDTH = 200;
     private final int CARD_HEIGHT = 250;
+    private final int NUM_OF_DECKS = 1;
+    
+    private Deck deck;
     
     private int playerXCor;
     private int playerYCor;
@@ -30,12 +33,26 @@ public class Board extends JPanel implements ActionListener{
     
     public Board(){
         initBoard();
+        
+        //deck.shuffleDeck(4);
+//        while(!deck.isEmpty()){
+//            deck.drawCard();
+//            System.out.println("Cards left: " + deck.getNumOfCards());
+//        }
+      
+        for(int i = 0; i < 51; i++){
+            //System.out.println("Card #: " + i);
+            System.out.println(deck.drawCard().toString());
+        }
+        System.out.println("done");
     }
     
     private void initBoard(){
         Color dark_green = new Color(0,115,0);
         setBackground(dark_green); 
         setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+        
+        deck = new Deck(NUM_OF_DECKS);
         
         loadCards();
         
@@ -58,8 +75,16 @@ public class Board extends JPanel implements ActionListener{
             name = cardNames[i].substring(0, divider1);
             suit = cardNames[i].substring(divider1 + 1, divider2);
             stringValue = cardNames[i].substring(divider2 + 1, cardNames[i].length() - 4);
+            ImageIcon tempIcon = new ImageIcon(cardNames[i]);
+            
+            for(int j = 0; j < NUM_OF_DECKS; j++){
+                Card newCard = new Card(tempIcon.getImage(), Integer.parseInt(stringValue), suit, name);
+                deck.addCard(newCard);
+            }
         }
     }
+    
+    
     
     @Override
     public void paintComponent(Graphics g){
