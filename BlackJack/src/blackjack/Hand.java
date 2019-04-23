@@ -65,4 +65,11 @@ public class Hand {
     public int getNumOfCards(){
         return numOfCards++;
     }
+    
+    public void displayHand(){
+        for (int i = 0; i < numOfCards; i++){
+            System.out.print(cards[i].toString() + " ");
+        }
+        System.out.println("");
+    }
 }

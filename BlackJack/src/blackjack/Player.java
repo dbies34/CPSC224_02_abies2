@@ -10,7 +10,7 @@ package blackjack;
  * @author ddbie
  */
 public class Player {
-    private Hand hand;
+    public Hand hand;
     
     private int chips;
     

@@ -23,13 +23,15 @@ public class Deck {
 
     public Deck(int numOfDecks){
         numOfCards = 0;
-        totalNumOfCards = numOfDecks * 52 -1;
+        totalNumOfCards = numOfDecks * 52 - 1;
         cards = new Card[totalNumOfCards];
     }
     
     public boolean addCard(Card card){
         if(numOfCards < totalNumOfCards){
-            cards[numOfCards++] = card;
+            cards[numOfCards] = card;
+            numOfCards++;
+            //System.out.println(card.toString());
             return true;
         }else{
             return false;
@@ -37,7 +39,8 @@ public class Deck {
     }
     
     public Card drawCard(){
-        return cards[numOfCards--];
+        numOfCards -= 1;
+        return cards[numOfCards];
     }
     
     // shuffles the cards num amount of times
@@ -55,11 +58,11 @@ public class Deck {
         }
     }
     
-    public boolean isEmpty(){
-        return numOfCards < 0;
+    public void displayDeck(){
+        for (int i = 0; i < totalNumOfCards; i++){
+            System.out.println(cards[i].toString());
+        }
     }
     
-    public int getNumOfCards(){
-        return numOfCards;
-    }
+    
 }

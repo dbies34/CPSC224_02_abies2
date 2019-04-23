@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
+import java.util.*;
 
 /**
  *
@@ -21,7 +22,8 @@ public class Board extends JPanel implements ActionListener{
     private final int CARD_HEIGHT = 250;
     private final int NUM_OF_DECKS = 1;
     
-    private Deck deck;
+    public Deck deck;
+   
     
     private int playerXCor;
     private int playerYCor;
@@ -33,32 +35,102 @@ public class Board extends JPanel implements ActionListener{
     
     public Board(){
         initBoard();
-        
-        //deck.shuffleDeck(4);
-//        while(!deck.isEmpty()){
-//            deck.drawCard();
-//            System.out.println("Cards left: " + deck.getNumOfCards());
-//        }
-      
-        for(int i = 0; i < 51; i++){
-            //System.out.println("Card #: " + i);
-            System.out.println(deck.drawCard().toString());
-        }
-        System.out.println("done");
+        game();
     }
+    
     
     private void initBoard(){
         Color dark_green = new Color(0,115,0);
         setBackground(dark_green); 
         setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-        
-        deck = new Deck(NUM_OF_DECKS);
-        
+        deck = new Deck (NUM_OF_DECKS);
         loadCards();
-        
-        addMouseListener(new MyMouseListener());
-    }
+       //deck.displayDeck();
+       addMouseListener(new MyMouseListener());
+   }
     
+    public void game(){
+        Scanner scn = new Scanner(System.in);
+        Boolean cont = true;
+        int op;
+        Player p1 = new Player("Player 1", 0);
+        Player p2 = new Player("Player 2", 0);
+        while (cont){ //Game Loop
+            JButton hitButton = new JButton("HIT");
+            hitButton.addActionListener(new hitBtnListener());
+            add(hitButton);
+            deck.shuffleDeck(1);
+            p1.hand.clearHand();
+            p2.hand.clearHand();
+            Boolean hit1 = true;
+            Boolean hit2 = true;
+            p1.hand.addCard(deck.drawCard());
+            p2.hand.addCard(deck.drawCard());
+            p1.hand.addCard(deck.drawCard());
+            p2.hand.addCard(deck.drawCard());
+            while(hit1 == true){ //Player 1's turn
+                System.out.println("Player 1:");
+                p1.hand.displayHand();
+                System.out.println("Would you like to hit?: 1/0");
+                op = scn.nextInt();
+                if (op == 1){
+                    hit1 = true;
+                } else{
+                    hit1 = false;
+                }
+                if (hit1 == true){
+                    p1.hand.addCard(deck.drawCard());
+                    System.out.println(p1.hand.getTotal());
+                } 
+                if (p1.hasBlackjack()){
+                    hit1 = false;
+                    System.out.println("Blackjack!");
+                }
+                if (p1.hasBust()){
+                    hit1 = false;
+                    System.out.println("Bust!");
+                } 
+            }
+            while(hit2 == true){ //Player 2's turn
+                System.out.println("Player 2:");
+                p2.hand.displayHand();
+                System.out.println("Would you like to hit?: 1/0");
+                op = scn.nextInt();
+                if (op == 1){
+                    hit2 = true;
+                } else{
+                    hit2 = false;
+                }
+                if (hit2 == true){
+                    p2.hand.addCard(deck.drawCard());
+                    System.out.println(p2.hand.getTotal());
+                } 
+                if (p2.hasBlackjack()){
+                    hit2 = false;
+                    System.out.println("Blackjack!");
+                }
+                if (p2.hasBust()){
+                    hit2 = false;
+                    System.out.println("Bust!");
+                } 
+        }
+       if ((p1.hand.getTotal() > p2.hand.getTotal() && !p1.hasBust()) || !p1.hasBust() && p2.hasBust()){
+           System.out.println("Player 1 wins!");
+       }
+       else if ((p2.hand.getTotal() > p1.hand.getTotal() && !p2.hasBust()) || !p2.hasBust() && p1.hasBust()){
+           System.out.println("Player 2 wins!");
+       }
+       System.out.println("Would you like to play again?: 1/0");
+                op = scn.nextInt();
+                if (op == 1){
+                    cont = true;
+                } else {
+                    cont = false;
+                }
+    }        
+    }
+  
+   
     private void loadCards(){
         File cardFile = new File("src/card_faces/");
         if(!cardFile.exists()){
@@ -80,11 +152,13 @@ public class Board extends JPanel implements ActionListener{
             for(int j = 0; j < NUM_OF_DECKS; j++){
                 Card newCard = new Card(tempIcon.getImage(), Integer.parseInt(stringValue), suit, name);
                 deck.addCard(newCard);
+                //System.out.println(newCard.toString());
             }
         }
+        
     }
     
-    
+
     
     @Override
     public void paintComponent(Graphics g){
@@ -94,6 +168,12 @@ public class Board extends JPanel implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         
+    }
+    private class hitBtnListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+            System.out.println("YOU HIT");
+        }
     }
     
     private class MyMouseListener implements MouseListener{
