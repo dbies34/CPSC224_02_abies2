@@ -28,6 +28,18 @@ public class Player {
         this.name = name;
     }
     
+    public void addCard(Card card){
+        hand.addCard(card);
+    }
+    
+    public void clearHand(){
+        hand.clearHand();
+    }
+    
+    public int getTotal(){
+        return hand.getTotal();
+    }
+    
     public String getName(){
         return name;
     }

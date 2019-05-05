@@ -13,8 +13,7 @@ import javax.swing.*;
 public class Blackjack extends JFrame {
     
     public Blackjack(){
-        Board b = new Board();
-        add(b);
+        add(new Board());
         pack();
         
         setTitle("Blackjack");
@@ -28,6 +27,4 @@ public class Blackjack extends JFrame {
         blackjack.setVisible(true);
     }
     
-    
 }
-    

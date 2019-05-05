@@ -14,7 +14,7 @@ public class Hand {
     private int numOfCards;
     private int numOfAces;
     
-    private Card cards[];
+    public Card cards[];
     
     public Hand(){
         numOfCards = 0;
@@ -23,9 +23,8 @@ public class Hand {
     }
     
     public boolean addCard(Card card){
-        if(numOfCards <= MAX_NUM){
-            cards[numOfCards] = card;
-            numOfCards++;
+        if(numOfCards < MAX_NUM){
+            cards[numOfCards++] = card;
             if(card.getValue() == 1)
                 numOfAces++;
             return true;
@@ -35,11 +34,11 @@ public class Hand {
     }
     
     public void clearHand(){
-        while(numOfCards > 0){
-            cards[numOfCards] = null;
-            numOfCards--;
+        for(int i = 0; i < MAX_NUM; i++){
+            cards[i] = null;
         }
         numOfAces = 0;
+        numOfCards = 0;
     }
     
     public boolean isBust(){
@@ -63,13 +62,13 @@ public class Hand {
     }
     
     public int getNumOfCards(){
-        return numOfCards++;
+        return numOfCards;
     }
     
     public void displayHand(){
         for (int i = 0; i < numOfCards; i++){
             System.out.print(cards[i].toString() + " ");
         }
-        System.out.println("");
+        System.out.println();
     }
 }

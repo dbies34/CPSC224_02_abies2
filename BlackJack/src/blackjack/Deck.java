@@ -11,36 +11,26 @@ import java.util.Random;
 public class Deck {
     private int numOfCards;
     private int totalNumOfCards;
-    private Card cards[];
-    
-    /*
-    public Deck(){
-        numOfCards = -1;
-        totalNumOfCards = -1;
-        cards = null;
-    }
-    */
+    public Card cards[];
 
     public Deck(int numOfDecks){
         numOfCards = 0;
-        totalNumOfCards = numOfDecks * 52 - 1;
+        totalNumOfCards = numOfDecks * 52;
         cards = new Card[totalNumOfCards];
     }
     
     public boolean addCard(Card card){
         if(numOfCards < totalNumOfCards){
-            cards[numOfCards] = card;
-            numOfCards++;
-            //System.out.println(card.toString());
+            cards[numOfCards++] = card;
             return true;
         }else{
+            System.out.println("card not added: " + card.toString());
             return false;
         }
     }
     
     public Card drawCard(){
-        numOfCards -= 1;
-        return cards[numOfCards];
+        return cards[--numOfCards];
     }
     
     // shuffles the cards num amount of times
@@ -58,11 +48,12 @@ public class Deck {
         }
     }
     
-    public void displayDeck(){
-        for (int i = 0; i < totalNumOfCards; i++){
-            System.out.println(cards[i].toString());
-        }
+    public boolean isEmpty(){
+        return numOfCards <= 0;
     }
     
-    
+    // returns actual number of cards
+    public int getNumOfCards(){
+        return numOfCards;
+    }
 }
