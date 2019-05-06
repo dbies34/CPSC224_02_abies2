@@ -9,6 +9,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -28,20 +30,30 @@ public class Board extends JPanel implements ActionListener{
     private final int DEALER_XCOR = 730;
     private final int DEALER_YCOR = 300;
     
+    private int pot = 0;
+    
+    private final Object[] wagerAmounts = {"1", "2", "5", "10", "25", "50", "100", "250", "500", "1000"};
+    
+    private JLabel status = new JLabel("Welcome to Blackjack!");
+    private JLabel potText = new JLabel("Pot: " + pot);
+    private JLabel playerTokens = new JLabel("          Player Tokens: " + 100);
     
     private Deck deck;
+    
     private Player player1;
     private Player dealer;
     
     private Image cardBack;
     
-    
-    
+    private Boolean turn1;
+    private Boolean hit1;
+    private Boolean advance;
+    private Boolean turnD;
+    private Boolean handOver = false;
+   
     
     public Board(){
-        initBoard();
-        //game();
-        
+       initBoard(); 
     }
     
     private void initBoard(){
@@ -55,81 +67,172 @@ public class Board extends JPanel implements ActionListener{
         deck.shuffleDeck(2);
         
         addMouseListener(new MyMouseListener());
-        
-        player1 = new Player("Player One", 100);
-        dealer = new Player("House", 0);
+        JButton hitButton = new JButton("HIT");
+        hitButton.addActionListener(new hitBtnListener());
+        add(hitButton);
+        JButton stayButton = new JButton("STAY");
+        stayButton.addActionListener(new stayBtnListener());
+        add(stayButton);
+    }
+    public void initGame(){
+        turn1 = true;
+        hit1 = false;
+        turnD = true;
         for(int i = 0; i < 2; i++){
             player1.addCard(deck.drawCard());
             dealer.addCard(deck.drawCard());
         }
     }
     
-    private void game(){
-        Scanner scn = new Scanner(System.in);
+    public void game(){
         Boolean cont = true;
         int op;
-        Player p1 = new Player("Player 1", 0);
-        Player p2 = new Player("Player 2", 0);
+        player1 = new Player("Player One", 100);
+        dealer = new Player("House", 0);
+        status.setFont(new Font("Serif", Font.BOLD, 36));
+        potText.setFont(new Font("Serif", Font.BOLD, 36));
+        playerTokens.setFont(new Font("Serif", Font.BOLD, 36));
+        add(status);
+        add(potText);
+        add(playerTokens);
+        Boolean haveBet;
         while (cont){ //Game Loop
-            JButton hitButton = new JButton("HIT");
-            hitButton.addActionListener(new hitBtnListener());
-            add(hitButton);
+            handOver = false;
+            haveBet = false;
+            initGame();
             deck.shuffleDeck(1);
-            p1.clearHand();
-            p2.clearHand();
-            Boolean hit1 = true;
-            Boolean hit2 = true;
-            p1.addCard(deck.drawCard());
-            p2.addCard(deck.drawCard());
-            p1.addCard(deck.drawCard());
-            p2.addCard(deck.drawCard());
-            while(hit1 == true){ //Player 1's turn
-                System.out.println("Player 1:");
-                p1.hand.displayHand();
-                System.out.println("Would you like to hit?: 1/0");
-                op = scn.nextInt();
-                hit1 = op == 1;
-                if (hit1 == true){
-                    p1.addCard(deck.drawCard());
-                    System.out.println(p1.hand.getTotal());
-                } 
-                if (p1.hasBlackjack()){
-                    hit1 = false;
-                    System.out.println("Blackjack!");
+            while(turn1 == true){ //Player 1's turn
+                player1.hand.displayHand();
+                if (haveBet == false){
+                    status.setText("How much would you like to wager?");
+                    String wagerS = (String)JOptionPane.showInputDialog(null, "Wager Amount:", "Wager", JOptionPane.PLAIN_MESSAGE, null, wagerAmounts, "1");
+                    int wager = Integer.parseInt(wagerS);
+                    if (wager >= player1.getChips()){
+                        JOptionPane.showMessageDialog(this, "Warning: You are going all in!");
+                        wager = player1.getChips();
+                    }
+                    player1.removeChips(wager);
+                    pot += wager;
+                    potText.setText("Pot: " + pot);
+                    status.setText("Dealer Bets " + wager + "!");
+                    playerTokens.setText("          Player Tokens: " + player1.getChips());
+                    try {
+                            Thread.sleep(1500);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    pot += wager;
+                    potText.setText("Pot: " + pot);
+                    haveBet = true;
                 }
-                if (p1.hasBust()){
+                status.setText("Would you like to hit?");
+                advance = false;
+                while (!advance){
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (hit1 == true){
+                    player1.addCard(deck.drawCard());
+                    repaint();
                     hit1 = false;
-                    System.out.println("Bust!");
+                } 
+                if (player1.hasBlackjack()){
+                    turn1 = false;
+                    status.setText("BlackJack!");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                if (player1.hasBust()){
+                    turn1 = false;
+                    status.setText("Bust!");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 } 
             }
-            while(hit2 == true){ //Player 2's turn
-                System.out.println("Player 2:");
-                p2.hand.displayHand();
-                System.out.println("Would you like to hit?: 1/0");
-                op = scn.nextInt();
-                hit2 = op == 1;
-                if (hit2 == true){
-                    p2.hand.addCard(deck.drawCard());
-                    System.out.println(p2.hand.getTotal());
+            while(turnD == true){ //Player 2's turn
+                if (dealer.hand.getTotal() < 17){
+                    dealer.hand.addCard(deck.drawCard());
+                    status.setText("Dealer Hit!");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    repaint();
                 } 
-                if (p2.hasBlackjack()){
-                    hit2 = false;
-                    System.out.println("Blackjack!");
+                if (dealer.hasBlackjack()){
+                    turnD = false;
+                    status.setText("Dealer Got Blackjack!");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-                if (p2.hasBust()){
-                    hit2 = false;
-                    System.out.println("Bust!");
-                } 
+                if (dealer.hasBust()){
+                    turnD = false;
+                    status.setText("Dealer Bust!");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    repaint();
+                    turnD = false;
+                }
         }
-       if ((p1.hand.getTotal() > p2.hand.getTotal() && !p1.hasBust()) || !p1.hasBust() && p2.hasBust()){
-           System.out.println("Player 1 wins!");
+        handOver = true;
+        repaint();
+       if ((player1.hand.getTotal() > dealer.hand.getTotal() && !player1.hasBust()) || !player1.hasBust() && dealer.hasBust()){
+           JOptionPane.showMessageDialog(null, "Player Wins! You won " + pot + " tokens!");
+           status.setText("Player Wins!");
+           player1.addChips(pot);
+           playerTokens.setText("          Player Tokens: " + player1.getChips());
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+                    }
        }
-       else if ((p2.hand.getTotal() > p1.hand.getTotal() && !p2.hasBust()) || !p2.hasBust() && p1.hasBust()){
-           System.out.println("Player 2 wins!");
+       else if ((dealer.hand.getTotal() > player1.hand.getTotal() && !dealer.hasBust()) || !dealer.hasBust() && player1.hasBust()){
+           JOptionPane.showMessageDialog(null, "Dealer Wins!");
+           status.setText("Dealer Wins!");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+                    }
        }
-       System.out.println("Would you like to play again?: 1/0");
-                op = scn.nextInt();
-                cont = op == 1;
+       else {
+           JOptionPane.showMessageDialog(null, "Push! Dealer Wins!");
+           status.setText("Push! Dealer Wins!");
+       }
+       pot = 0;
+       potText.setText("Pot: " + pot);
+       if (player1.getChips() < 1){
+                JOptionPane.showMessageDialog(this, "Sorry, you are out of chips.  Please \nleave the table and come back later!");
+                System.exit(0);
+            }
+       int n = JOptionPane.showConfirmDialog(null, "Would you like to play again?", "Play Again?", JOptionPane.YES_NO_OPTION);
+       System.out.println(n);
+       if (n == 0){
+           cont = true;
+       } else{
+           System.exit(0);
+       }
+       dealer.hand.clearHand();
+       player1.hand.clearHand();
+       repaint();
     }        
     }
     
@@ -169,13 +272,21 @@ public class Board extends JPanel implements ActionListener{
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         drawHand(g, player1.hand, PLAYER_XCOR, PLAYER_YCOR);
-        drawHand(g, dealer.hand, DEALER_XCOR, DEALER_YCOR);
+        if (handOver){
+            drawHand(g, dealer.hand, DEALER_XCOR, DEALER_YCOR-1);
+        }else{
+            drawHand(g, dealer.hand, DEALER_XCOR, DEALER_YCOR);
+        }
         drawDeck(g);
     }
     
     public void drawHand(Graphics g, Hand hand, int xcor, int ycor){
         for(int i = 0; i < hand.getNumOfCards(); i++){
-            g.drawImage(hand.cards[i].getImage(), xcor + i * 40, ycor, CARD_WIDTH, CARD_HEIGHT, this);
+            if (i == 0 && (ycor == DEALER_YCOR)){
+                g.drawImage(cardBack, xcor + i * 40, ycor, CARD_WIDTH, CARD_HEIGHT, this);
+            }else {
+                g.drawImage(hand.cards[i].getImage(), xcor + i * 40, ycor, CARD_WIDTH, CARD_HEIGHT, this);
+            }
         }
     }
     
@@ -194,6 +305,18 @@ public class Board extends JPanel implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e){
             System.out.println("you hit");
+            hit1 = true;
+            advance = true;
+        }
+    }
+    
+    private class stayBtnListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+            System.out.println("you stayed");
+            //hit1 = false;
+            turn1 = false;
+            advance = true;
         }
     }
     

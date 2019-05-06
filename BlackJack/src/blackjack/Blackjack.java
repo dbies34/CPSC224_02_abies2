@@ -12,8 +12,8 @@ import javax.swing.*;
  */
 public class Blackjack extends JFrame {
     
-    public Blackjack(){
-        add(new Board());
+    public Blackjack(Board board){
+        add(board);
         pack();
         
         setTitle("Blackjack");
@@ -23,8 +23,11 @@ public class Blackjack extends JFrame {
     }
     
     public static void main(String[] args) {
-        Blackjack blackjack = new Blackjack();
+        Board brd = new Board();
+        Blackjack blackjack = new Blackjack(brd);
         blackjack.setVisible(true);
+        brd.game();
+        
     }
     
 }
