@@ -86,7 +86,6 @@ public class Board extends JPanel implements ActionListener{
     
     public void game(){
         Boolean cont = true;
-        int op;
         player1 = new Player("Player One", 100);
         dealer = new Player("House", 0);
         status.setFont(new Font("Serif", Font.BOLD, 36));
@@ -102,7 +101,7 @@ public class Board extends JPanel implements ActionListener{
             initGame();
             deck.shuffleDeck(1);
             while(turn1 == true){ //Player 1's turn
-                player1.hand.displayHand();
+                //player1.hand.displayHand();
                 if (haveBet == false){
                     status.setText("How much would you like to wager?");
                     String wagerS = (String)JOptionPane.showInputDialog(null, "Wager Amount:", "Wager", JOptionPane.PLAIN_MESSAGE, null, wagerAmounts, "1");
@@ -124,6 +123,16 @@ public class Board extends JPanel implements ActionListener{
                     pot += wager;
                     potText.setText("Pot: " + pot);
                     haveBet = true;
+                }
+                if (player1.hasBlackjack()){
+                    turn1 = false;
+                    status.setText("BlackJack!");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
                 }
                 status.setText("Would you like to hit?");
                 advance = false;
@@ -224,7 +233,6 @@ public class Board extends JPanel implements ActionListener{
                 System.exit(0);
             }
        int n = JOptionPane.showConfirmDialog(null, "Would you like to play again?", "Play Again?", JOptionPane.YES_NO_OPTION);
-       System.out.println(n);
        if (n == 0){
            cont = true;
        } else{
@@ -304,7 +312,6 @@ public class Board extends JPanel implements ActionListener{
     private class hitBtnListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e){
-            System.out.println("you hit");
             hit1 = true;
             advance = true;
         }
@@ -313,8 +320,6 @@ public class Board extends JPanel implements ActionListener{
     private class stayBtnListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e){
-            System.out.println("you stayed");
-            //hit1 = false;
             turn1 = false;
             advance = true;
         }
